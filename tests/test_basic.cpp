@@ -4,6 +4,8 @@
 
 TEST(Basic, example1)
 {
+    paisano::Series<int> s(std::vector<int>{1, 2, 3});
+
     EXPECT_EQ(1, 1);
 }
 
