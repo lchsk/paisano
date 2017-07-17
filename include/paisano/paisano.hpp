@@ -32,11 +32,13 @@ namespace paisano {
 
 	private:
 		std::vector<T> data_;
+		RangeIndex index_;
 	};
 
 	template <typename T>
 	Series<T>::Series(const std::vector<T>& data) :
-		data_(data)
+		data_(data),
+		index_(RangeIndex(0, data.size(), 1))
 	{
 	}
 
