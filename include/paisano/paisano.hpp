@@ -10,6 +10,8 @@ namespace paisano {
 	public:
 		Series(const std::vector<T>& data);
 
+		const std::vector<T>& data() const;
+
 	private:
 		std::vector<T> data_;
 	};
@@ -18,6 +20,12 @@ namespace paisano {
 	Series<T>::Series(const std::vector<T>& data) :
 		data_(data)
 	{
+	}
+
+	template <typename T>
+	const std::vector<T>& Series<T>::data() const
+	{
+		return data_;
 	}
 }
 

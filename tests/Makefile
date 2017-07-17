@@ -5,7 +5,7 @@ CPP_TEST_FLAGS = -pthread
 GTEST_LIB = $(GTEST_DIR)/../googlemock/gtest/libgtest.a
 GMOCK_LIB = $(GTEST_DIR)/../googlemock/libgmock.a
 
-TESTS = test_basic
+TESTS = test_series_creation
 
 all: clean $(GTEST_LIB) $(TESTS) check
 
@@ -15,6 +15,7 @@ clean:
 check:
 	$(foreach var, $(TESTS), ./$(var);)
 
-test_basic:
+test_series_creation:
 	$(CXX) -I $(GMOCK_DIR)/include/ -I $(GTEST_DIR)/include/  \
-	test_basic.cpp  $(GTEST_LIB) $(GMOCK_LIB) $(CPP_TEST_FLAGS) -o test_basic
+	test_series_creation.cpp \
+        $(GTEST_LIB) $(GMOCK_LIB) $(CPP_TEST_FLAGS) -o test_series_creation
