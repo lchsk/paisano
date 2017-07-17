@@ -5,6 +5,24 @@
 
 namespace paisano {
 
+	class RangeIndex {
+	public:
+		RangeIndex(const int64_t start, const int64_t stop, const int step);
+
+	private:
+		int64_t start_, stop_, step_;
+	};
+
+	RangeIndex::RangeIndex(const int64_t start,
+						   const int64_t stop,
+						   const int step) :
+		start_(start),
+		stop_(stop),
+		step_(step)
+	{
+	}
+
+
 	template <typename T>
 	class Series {
 	public:
