@@ -16,6 +16,14 @@ TEST(SeriesCreation, test_series_has_a_copy)
     EXPECT_EQ(v.size(), 4);
 }
 
+TEST(SeriesCreation, test_series_created_with_explicit_index)
+{
+    std::vector<int> v{1, 2, 3};
+    std::vector<std::string> i{"a", "b", "c"};
+
+    paisano::Series<int, std::string> s(v, i);
+}
+
 int main (int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
 
