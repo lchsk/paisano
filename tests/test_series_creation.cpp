@@ -21,7 +21,16 @@ TEST(SeriesCreation, test_series_created_with_explicit_index)
     std::vector<int> v{1, 2, 3};
     std::vector<std::string> i{"a", "b", "c"};
 
+    // Convert std::vector to paisano::Index implicitly
     paisano::Series<int, std::string> s(v, i);
+}
+
+TEST(SeriesCreation, test_series_using_index_type)
+{
+    // TODO: Add brace-enclosed initializer list
+    paisano::Index<double> i{std::vector<double>{1.1, 1.2, 1.3}};
+
+    paisano::Series<double, double> s(std::vector<double>{.1, .2, .3}, i);
 }
 
 int main (int argc, char** argv) {

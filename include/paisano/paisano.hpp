@@ -18,6 +18,12 @@ namespace paisano {
 		std::vector<T> index_;
 	};
 
+	template <typename T>
+	Index<T>::Index(const std::vector<T>& index) :
+		index_(index)
+	{
+	}
+
 	class RangeIndex : public IndexBase {
 	public:
 		RangeIndex();
@@ -40,32 +46,30 @@ namespace paisano {
 	{
 	}
 
-
 	template <typename T, typename U = None>
 	class Series {
 	public:
 		Series(const std::vector<T>& data);
-		Series(const std::vector<T>& data, const std::vector<U>& index);
+		Series(const std::vector<T>& data, const Index<U>& index);
 
 		const std::vector<T>& data() const;
 
 	private:
 		std::vector<T> data_;
-		std::vector<U> index_;
-		RangeIndex range_index_;
+		std::unique_ptr<IndexBase> index_;
 	};
 
 	template <typename T, typename U>
 	Series<T, U>::Series(const std::vector<T>& data) :
 		data_(data),
-		range_index_(RangeIndex(0, data.size(), 1))
+		index_(std::make_unique<RangeIndex>(0, data.size(), 1))
 	{
 	}
 
 	template <typename T, typename U>
-	Series<T, U>::Series(const std::vector<T>& data, const std::vector<U>& index) :
+	Series<T, U>::Series(const std::vector<T>& data, const Index<U>& index) :
 		data_(data),
-		index_(index)
+		index_(std::make_unique<Index<U> >(index))
 	{
 	}
 
