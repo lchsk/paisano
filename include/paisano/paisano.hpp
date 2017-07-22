@@ -7,7 +7,18 @@ namespace paisano {
 
 	class None {};
 
-	class RangeIndex {
+	class IndexBase {};
+
+	template <typename T>
+	class Index : public IndexBase {
+	public:
+		Index(const std::vector<T>& index);
+
+	private:
+		std::vector<T> index_;
+	};
+
+	class RangeIndex : public IndexBase {
 	public:
 		RangeIndex();
 		RangeIndex(const int64_t start, const int64_t stop, const int step);
