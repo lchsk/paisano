@@ -33,6 +33,12 @@ TEST(SeriesCreation, test_series_using_index_type)
     paisano::Series<double, double> s(std::vector<double>{.1, .2, .3}, i);
 }
 
+TEST(SeriesCreation, test_series_with_explicit_range_index)
+{
+    paisano::Series<int> s(std::vector<int>{1, 2, 3},
+                           paisano::RangeIndex(100, 1000, 5));
+}
+
 int main (int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
 
