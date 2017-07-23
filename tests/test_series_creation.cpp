@@ -39,9 +39,19 @@ TEST(SeriesCreation, test_series_with_explicit_range_index)
                            paisano::RangeIndex(100, 1000, 5));
 }
 
-TEST(SeriesCreation, test_series_from_maps)
+TEST(SeriesCreation, test_series_from_map)
 {
     std::map<std::string, int, std::less<std::string> > m = {
+        {"one", 1},
+        {"two", 2},
+    };
+
+    paisano::Series<int, std::string> s(m);
+}
+
+TEST(SeriesCreation, test_series_from_unordered_map)
+{
+    std::unordered_map<std::string, int> m = {
         {"one", 1},
         {"two", 2},
     };
