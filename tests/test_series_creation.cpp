@@ -39,6 +39,16 @@ TEST(SeriesCreation, test_series_with_explicit_range_index)
                            paisano::RangeIndex(100, 1000, 5));
 }
 
+TEST(SeriesCreation, test_series_from_maps)
+{
+    std::map<std::string, int, std::less<std::string> > m = {
+        {"one", 1},
+        {"two", 2},
+    };
+
+    paisano::Series<int, std::string> s(m);
+}
+
 int main (int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
 
