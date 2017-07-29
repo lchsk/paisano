@@ -24,8 +24,8 @@ namespace paisano {
 	template <typename T>
 	class IndexBase {
 	public:
-		virtual std::vector<T>& get_index(){};
-		virtual std::vector<T>& assert_invariants(const std::size_t data_size){};
+		virtual std::vector<T>& get_index_(){};
+		virtual std::vector<T>& assert_invariants_(const std::size_t data_size){};
 	};
 
 	template <typename T>
@@ -34,9 +34,10 @@ namespace paisano {
 		Index(const std::vector<T>& index);
 
 	private:
+		std::vector<T>& assert_invariants_(const std::size_t data_size);
+		std::vector<T>& get_index_();
+
 		std::vector<T> index_;
-		std::vector<T>& get_index();
-		std::vector<T>& assert_invariants(const std::size_t data_size);
 	};
 
 	template <typename T>
@@ -46,13 +47,13 @@ namespace paisano {
 	}
 
 	template <typename T>
-	std::vector<T>& Index<T>::get_index()
+	std::vector<T>& Index<T>::get_index_()
 	{
 		return index_;
 	}
 
 	template <typename T>
-	std::vector<T>& Index<T>::assert_invariants(const std::size_t data_size)
+	std::vector<T>& Index<T>::assert_invariants_(const std::size_t data_size)
 	{
 		if (data_size != index_.size()) {
 			std::stringstream s;
@@ -152,7 +153,7 @@ namespace paisano {
 		data_.resize(map.size());
 
 		for (const auto &i : map) {
-			index_->get_index().push_back(i.first);
+			index_->get_index_().push_back(i.first);
 			data_.push_back(i.second);
 		}
 	}
@@ -160,7 +161,7 @@ namespace paisano {
 	template <typename T, typename U>
 	void Series<T, U>::assert_invariants_()
 	{
-		index_->assert_invariants(data_.size());
+		index_->assert_invariants_(data_.size());
 	}
 
 	template <typename T, typename U>
