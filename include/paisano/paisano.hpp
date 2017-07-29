@@ -26,6 +26,10 @@ namespace paisano {
     public:
         virtual std::vector<T>& get_index_(){};
         virtual std::vector<T>& assert_invariants_(const std::size_t data_size){};
+
+        virtual const int64_t get_start_() {};
+        virtual const int64_t get_stop_() {};
+        virtual const int get_step_() {};
     };
 
     template <typename T>
@@ -36,6 +40,10 @@ namespace paisano {
     private:
         std::vector<T>& assert_invariants_(const std::size_t data_size);
         std::vector<T>& get_index_();
+
+        const int64_t get_start_() { return 0; };
+        const int64_t get_stop_() { return index_.size(); };
+        const int get_step_() { return 1; };
 
         std::vector<T> index_;
     };
@@ -74,6 +82,11 @@ namespace paisano {
 
     private:
         int64_t start_, stop_, step_;
+
+        const int64_t get_start_() { return start_; };
+        const int64_t get_stop_() { return stop_; };
+        const int get_step_() { return step_; };
+
     };
 
     RangeIndex::RangeIndex()
@@ -97,6 +110,23 @@ namespace paisano {
         Series(const std::vector<T>& data, const RangeIndex& index);
         Series(const std::map<U, T>& map);
         Series(const std::unordered_map<U, T>& map);
+
+		const T& operator[](const U& index) {
+            auto it = std::find(index_->get_index_().begin(),
+                                index_->get_index_().end(),
+                                index);
+
+            if (it == index_->get_index_().end()) {
+                throw std::out_of_range("Out of range");
+            }
+
+            return data_[std::distance(index_->get_index_().begin(), it)];
+		}
+
+        const T& operator[](const int index) {
+            return data_.at((index - index_->get_start_())
+                            / index_->get_step_());
+		}
 
         const std::vector<T>& data() const;
 
