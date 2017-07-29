@@ -124,15 +124,7 @@ namespace paisano {
         }
 
         T& operator[](const U& index) {
-            auto it = std::find(index_->get_index_().begin(),
-                                index_->get_index_().end(),
-                                index);
-
-            if (it == index_->get_index_().end()) {
-                throw std::out_of_range("Out of range");
-            }
-
-            return data_[std::distance(index_->get_index_().begin(), it)];
+            return const_cast<T&>(static_cast<const Series&>(*this)[index]);
         }
 
         const T& operator[](const int index) const {
@@ -145,12 +137,7 @@ namespace paisano {
         }
 
         T& operator[](const int index) {
-            if (index % index_->get_step_() != 0) {
-                throw std::out_of_range("Out of range");
-            }
-
-            return data_.at((index - index_->get_start_())
-                            / index_->get_step_());
+            return const_cast<T&>(static_cast<const Series&>(*this)[index]);
         }
 
         const std::vector<T>& data() const;
