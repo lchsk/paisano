@@ -111,34 +111,11 @@ namespace paisano {
         Series(const std::map<U, T>& map);
         Series(const std::unordered_map<U, T>& map);
 
-        const T& operator[](const U& index) const {
-            auto it = std::find(index_->get_index_().begin(),
-                                index_->get_index_().end(),
-                                index);
+        const T& operator[](const U& index) const;
+        T& operator[](const U& index);
 
-            if (it == index_->get_index_().end()) {
-                throw std::out_of_range("Out of range");
-            }
-
-            return data_[std::distance(index_->get_index_().begin(), it)];
-        }
-
-        T& operator[](const U& index) {
-            return const_cast<T&>(static_cast<const Series&>(*this)[index]);
-        }
-
-        const T& operator[](const int index) const {
-            if (index % index_->get_step_() != 0) {
-                throw std::out_of_range("Out of range");
-            }
-
-            return data_.at((index - index_->get_start_())
-                            / index_->get_step_());
-        }
-
-        T& operator[](const int index) {
-            return const_cast<T&>(static_cast<const Series&>(*this)[index]);
-        }
+        inline const T& operator[](const int index) const;
+        inline T& operator[](const int index);
 
         const std::vector<T>& data() const;
 
@@ -186,6 +163,42 @@ namespace paisano {
         index_(std::make_unique<Index<U> >(std::vector<U>(map.size())))
     {
         init_map_(map);
+    }
+
+    template <typename T, typename U>
+    const T& Series<T, U>::operator[](const U& index) const
+    {
+        auto it = std::find(index_->get_index_().begin(),
+                            index_->get_index_().end(),
+                            index);
+
+        if (it == index_->get_index_().end()) {
+            throw std::out_of_range("Out of range");
+        }
+
+        return data_[std::distance(index_->get_index_().begin(), it)];
+    }
+
+    template <typename T, typename U>
+    T& Series<T, U>::operator[](const U& index)
+    {
+        return const_cast<T&>(static_cast<const Series&>(*this)[index]);
+    }
+
+    template <typename T, typename U>
+    inline const T& Series<T, U>::operator[](const int index) const
+    {
+        if (index % index_->get_step_() != 0) {
+            throw std::out_of_range("Out of range");
+        }
+
+        return data_.at((index - index_->get_start_()) / index_->get_step_());
+    }
+
+    template <typename T, typename U>
+    inline T& Series<T, U>::operator[](const int index)
+    {
+        return const_cast<T&>(static_cast<const Series&>(*this)[index]);
     }
 
     template <typename T, typename U>
