@@ -111,7 +111,7 @@ namespace paisano {
         Series(const std::map<U, T>& map);
         Series(const std::unordered_map<U, T>& map);
 
-		const T& operator[](const U& index) {
+        const T& operator[](const U& index) const {
             auto it = std::find(index_->get_index_().begin(),
                                 index_->get_index_().end(),
                                 index);
@@ -121,12 +121,37 @@ namespace paisano {
             }
 
             return data_[std::distance(index_->get_index_().begin(), it)];
-		}
+        }
 
-        const T& operator[](const int index) {
+        T& operator[](const U& index) {
+            auto it = std::find(index_->get_index_().begin(),
+                                index_->get_index_().end(),
+                                index);
+
+            if (it == index_->get_index_().end()) {
+                throw std::out_of_range("Out of range");
+            }
+
+            return data_[std::distance(index_->get_index_().begin(), it)];
+        }
+
+        const T& operator[](const int index) const {
+            if (index % index_->get_step_() != 0) {
+                throw std::out_of_range("Out of range");
+            }
+
             return data_.at((index - index_->get_start_())
                             / index_->get_step_());
-		}
+        }
+
+        T& operator[](const int index) {
+            if (index % index_->get_step_() != 0) {
+                throw std::out_of_range("Out of range");
+            }
+
+            return data_.at((index - index_->get_start_())
+                            / index_->get_step_());
+        }
 
         const std::vector<T>& data() const;
 
