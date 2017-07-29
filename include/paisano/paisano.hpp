@@ -25,6 +25,7 @@ namespace paisano {
 	class IndexBase {
 	public:
 		virtual std::vector<T>& get_index(){};
+		virtual std::vector<T>& assert_invariants(const std::size_t data_size){};
 	};
 
 	template <typename T>
@@ -35,6 +36,7 @@ namespace paisano {
 	private:
 		std::vector<T> index_;
 		std::vector<T>& get_index();
+		std::vector<T>& assert_invariants(const std::size_t data_size);
 	};
 
 	template <typename T>
@@ -47,6 +49,21 @@ namespace paisano {
 	std::vector<T>& Index<T>::get_index()
 	{
 		return index_;
+	}
+
+	template <typename T>
+	std::vector<T>& Index<T>::assert_invariants(const std::size_t data_size)
+	{
+		if (data_size != index_.size()) {
+			std::stringstream s;
+			s << "Invalid number of arguments, data has "
+			  << data_size
+			  << " elements and index has "
+			  << index_.size()
+			  << " elements";
+
+			throw std::invalid_argument(s.str());
+		}
 	}
 
 	class RangeIndex : public IndexBase<None> {
@@ -85,6 +102,7 @@ namespace paisano {
 	private:
 		template <typename MAP>
 		void init_map_(const MAP& map);
+		void assert_invariants_();
 
 		std::vector<T> data_;
 		std::unique_ptr<IndexBase<U>> index_;
@@ -95,12 +113,14 @@ namespace paisano {
 		data_(data),
 		index_(std::make_unique<RangeIndex>(index))
 	{
+		assert_invariants_();
 	}
 
 	template <typename T, typename U>
 	Series<T, U>::Series(const std::vector<T>& data) :
 		Series<T, U>(data, RangeIndex(0, data.size(), 1))
 	{
+		assert_invariants_();
 	}
 
 	template <typename T, typename U>
@@ -108,6 +128,7 @@ namespace paisano {
 		data_(data),
 		index_(std::make_unique<Index<U> >(index))
 	{
+		assert_invariants_();
 	}
 
 	template <typename T, typename U>
@@ -134,6 +155,12 @@ namespace paisano {
 			index_->get_index().push_back(i.first);
 			data_.push_back(i.second);
 		}
+	}
+
+	template <typename T, typename U>
+	void Series<T, U>::assert_invariants_()
+	{
+		index_->assert_invariants(data_.size());
 	}
 
 	template <typename T, typename U>
