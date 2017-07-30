@@ -46,7 +46,11 @@ TEST(SeriesAccess, test_string_access)
 
     paisano::Series<int, std::string> s(v, i);
 
+    // Test that access works using the string key
     EXPECT_EQ(s["b"], 2);
+
+    // Access using an integer index must still work
+    EXPECT_EQ(s[0], 1);
 
     try {
         std::cout << s["d"];
@@ -93,6 +97,10 @@ TEST(SeriesAccess, test_update_by_range_index_integer)
     s[0] = 0;
     s[100] = 100;
 
+    EXPECT_EQ(s[-100], -100);
+    EXPECT_EQ(s[0], 0);
+    EXPECT_EQ(s[100], 100);
+
     try {
         s[1] = 1;
 
@@ -112,6 +120,13 @@ TEST(SeriesAccess, test_update_by_string)
     EXPECT_EQ(s["b"], 2);
 
     s["b"] = 1;
+
+    EXPECT_EQ(s["b"], 1);
+
+    // Update by an integer key must still work
+    s[0] = -1;
+
+    EXPECT_EQ(s[0], -1);
 
     try {
         s["d"] = -1;
