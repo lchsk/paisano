@@ -27,5 +27,5 @@ matrix:
 script:
   - uname -a
   - $COMPILER --version
-  - cd thirdparty/googletest && cmake . && make
+  - cd thirdparty/googletest && cmake -DCMAKE_CXX_COMPILER=$COMPILER . && make
   - cd ../../tests && make
