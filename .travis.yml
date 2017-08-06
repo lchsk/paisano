@@ -12,8 +12,6 @@ matrix:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['g++-5']
       env: COMPILER=g++-5
-
-  include:
     - os: linux
       compiler: g++
       before_install:
