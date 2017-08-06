@@ -1,6 +1,6 @@
 GTEST_DIR = ../thirdparty/googletest/googletest
 GMOCK_DIR = ../thirdparty/googletest/googlemock
-CPP_TEST_FLAGS = -pthread
+CPP_TEST_FLAGS = -pthread -std=c++14
 
 GTEST_LIB = $(GTEST_DIR)/../googlemock/gtest/libgtest.a
 GMOCK_LIB = $(GTEST_DIR)/../googlemock/libgmock.a
