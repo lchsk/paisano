@@ -103,23 +103,23 @@ namespace paisano {
     }
 
     template <typename T, typename U = None>
-    class Series {
+    class BaseSeries {
     public:
-        Series(const std::vector<T>& data);
-        Series(const std::vector<T>& data, const Index<U>& index);
-        Series(const std::vector<T>& data, const RangeIndex& index);
-        Series(const std::map<U, T>& map);
-        Series(const std::unordered_map<U, T>& map);
+        BaseSeries(const std::vector<T>& data);
+        BaseSeries(const std::vector<T>& data, const Index<U>& index);
+        BaseSeries(const std::vector<T>& data, const RangeIndex& index);
+        BaseSeries(const std::map<U, T>& map);
+        BaseSeries(const std::unordered_map<U, T>& map);
 
-        const T& operator[](const U& index) const;
-        T& operator[](const U& index);
+        const T& get_index_by_int_(const int index) const;
+        T& get_index_by_int_(const int index);
 
-        inline const T& operator[](const int index) const;
-        inline T& operator[](const int index);
+        const T& get_index_by_U_(const U& index) const;
+        T& get_index_by_U_(const U& index);
 
         const std::vector<T>& data() const;
 
-    private:
+    protected:
         template <typename MAP>
         void init_map_(const MAP& map);
         void assert_invariants_();
@@ -129,7 +129,8 @@ namespace paisano {
     };
 
     template <typename T, typename U>
-    Series<T, U>::Series(const std::vector<T>& data, const RangeIndex& index) :
+    BaseSeries<T, U>::BaseSeries(const std::vector<T>& data,
+                                 const RangeIndex& index) :
         data_(data),
         index_(std::make_unique<RangeIndex>(index))
     {
@@ -137,36 +138,121 @@ namespace paisano {
     }
 
     template <typename T, typename U>
-    Series<T, U>::Series(const std::vector<T>& data) :
-        Series<T, U>(data, RangeIndex(0, data.size(), 1))
+    BaseSeries<T, U>::BaseSeries(const std::vector<T>& data) :
+        BaseSeries<T, U>(data, RangeIndex(0, data.size(), 1))
     {
         assert_invariants_();
     }
 
     template <typename T, typename U>
-    Series<T, U>::Series(const std::vector<T>& data, const Index<U>& index) :
+    BaseSeries<T, U>::BaseSeries(const std::vector<T>& data,
+                                 const Index<U>& index) :
         data_(data),
         index_(std::make_unique<Index<U> >(index))
     {
         assert_invariants_();
     }
 
+    template <typename T, typename U = None>
+    class Series : public BaseSeries<T, U> {
+    public:
+        Series(const std::vector<T>& data, const Index<U>& index)
+            : BaseSeries<T, U>(data, index) {}
+        Series(const std::map<U, T>& map)
+            : BaseSeries<T, U>(map) {}
+        Series(const std::unordered_map<U, T>& map)
+            : BaseSeries<T, U>(map) {}
+
+        const T& operator[](const U& index) const
+        {
+            return BaseSeries<T, U>::get_index_by_U_(index);
+        };
+
+        T& operator[](const U& index)
+        {
+            return BaseSeries<T, U>::get_index_by_U_(index);
+        };
+
+        const T& operator[](const int index) const
+        {
+            return BaseSeries<T, U>::get_index_by_int_(index);
+        };
+
+        T& operator[](const int index)
+        {
+            return BaseSeries<T, U>::get_index_by_int_(index);
+        };
+    };
+
+    template <typename T>
+    class Series<T, None> : public BaseSeries<T, None> {
+    public:
+        Series(const std::vector<T>& data)
+            : BaseSeries<T>(data) {}
+        Series(const std::vector<T>& data, const RangeIndex& index)
+            : BaseSeries<T, None>(data, index) {};
+
+        const T& operator[](const int index) const
+        {
+            return BaseSeries<T, None>::get_index_by_int_(index);
+        };
+
+        T& operator[](const int index)
+        {
+            return BaseSeries<T, None>::get_index_by_int_(index);
+        };
+    };
+
+    template <typename T>
+    class Series<T, int> : public BaseSeries<T, int> {
+    public:
+        Series(const std::vector<T>& data, const Index<int>& index)
+            : BaseSeries<T, int>(data, index) {}
+
+        const T& operator[](const int index) const
+        {
+            return BaseSeries<T, int>::get_index_by_int_(index);
+        };
+
+        T& operator[](const int index)
+        {
+            return BaseSeries<T, int>::get_index_by_int_(index);
+        };
+    };
+
     template <typename T, typename U>
-    Series<T, U>::Series(const std::map<U, T>& map) :
+    BaseSeries<T, U>::BaseSeries(const std::map<U, T>& map) :
         index_(std::make_unique<Index<U> >(std::vector<U>(map.size())))
     {
         init_map_(map);
     }
 
     template <typename T, typename U>
-    Series<T, U>::Series(const std::unordered_map<U, T>& map) :
+    BaseSeries<T, U>::BaseSeries(const std::unordered_map<U, T>& map) :
         index_(std::make_unique<Index<U> >(std::vector<U>(map.size())))
     {
         init_map_(map);
     }
 
     template <typename T, typename U>
-    const T& Series<T, U>::operator[](const U& index) const
+    const T& BaseSeries<T, U>::get_index_by_int_(const int index) const
+    {
+        if (index % index_->get_step_() != 0) {
+            throw std::out_of_range("Out of range");
+        }
+
+        return data_.at((index - index_->get_start_()) / index_->get_step_());
+    }
+
+    template <typename T, typename U>
+    T& BaseSeries<T, U>::get_index_by_int_(const int index)
+    {
+        return const_cast<T&>(static_cast<const BaseSeries&>(*this)
+                              .get_index_by_int_(index));
+    }
+
+    template <typename T, typename U>
+    const T& BaseSeries<T, U>::get_index_by_U_(const U& index) const
     {
         auto it = std::find(index_->get_index_().begin(),
                             index_->get_index_().end(),
@@ -180,30 +266,15 @@ namespace paisano {
     }
 
     template <typename T, typename U>
-    T& Series<T, U>::operator[](const U& index)
+    T& BaseSeries<T, U>::get_index_by_U_(const U& index)
     {
-        return const_cast<T&>(static_cast<const Series&>(*this)[index]);
-    }
-
-    template <typename T, typename U>
-    inline const T& Series<T, U>::operator[](const int index) const
-    {
-        if (index % index_->get_step_() != 0) {
-            throw std::out_of_range("Out of range");
-        }
-
-        return data_.at((index - index_->get_start_()) / index_->get_step_());
-    }
-
-    template <typename T, typename U>
-    inline T& Series<T, U>::operator[](const int index)
-    {
-        return const_cast<T&>(static_cast<const Series&>(*this)[index]);
+        return const_cast<T&>(static_cast<const BaseSeries&>(*this)
+                              .get_index_by_U_(index));
     }
 
     template <typename T, typename U>
     template <typename MAP>
-    void Series<T, U>::init_map_(const MAP& map)
+    void BaseSeries<T, U>::init_map_(const MAP& map)
     {
         data_.resize(map.size());
 
@@ -214,13 +285,13 @@ namespace paisano {
     }
 
     template <typename T, typename U>
-    void Series<T, U>::assert_invariants_()
+    void BaseSeries<T, U>::assert_invariants_()
     {
         index_->assert_invariants_(data_.size());
     }
 
     template <typename T, typename U>
-    const std::vector<T>& Series<T, U>::data() const
+    const std::vector<T>& BaseSeries<T, U>::data() const
     {
         return data_;
     }

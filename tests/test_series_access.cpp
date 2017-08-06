@@ -19,6 +19,42 @@ TEST(SeriesAccess, test_integer_access)
     }
 }
 
+TEST(SeriesAccess, test_explicit_integer_access)
+{
+	std::vector<int> v{1, 2, 3};
+	std::vector<int> i{1, 2, 3};
+
+    paisano::Series<int, int> s(v, i);
+
+    EXPECT_EQ(s[1], 2);
+
+    try {
+        std::cout << s[3];
+
+        FAIL();
+    } catch (std::out_of_range) {
+        SUCCEED();
+    }
+}
+
+TEST(SeriesAccess, test_explicit_index_object_access)
+{
+	std::vector<int> v{1, 2, 3};
+
+    paisano::Index<int> i({1,2,3});
+    paisano::Series<int, int> s(v, i);
+
+    EXPECT_EQ(s[1], 2);
+
+    try {
+        std::cout << s[3];
+
+        FAIL();
+    } catch (std::out_of_range) {
+        SUCCEED();
+    }
+}
+
 TEST(SeriesAccess, test_custom_range_index_access)
 {
 	std::vector<int> v{1, 2, 3};
