@@ -7,29 +7,38 @@ matrix:
       compiler: g++
       before_install:
       install:
+        - sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-5 90
       addons:
         apt:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['g++-5']
       env: COMPILER=g++-5
+      after_install:
+        - bash <(curl -s https://codecov.io/bash)
     - os: linux
       compiler: g++
       before_install:
       install:
+        - sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-6 90
       addons:
         apt:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['g++-6']
       env: COMPILER=g++-6
+      after_install:
+        - bash <(curl -s https://codecov.io/bash)
     - os: linux
       compiler: g++
       before_install:
       install:
+        - sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-7 90
       addons:
         apt:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['g++-7']
       env: COMPILER=g++-7
+      after_install:
+        - bash <(curl -s https://codecov.io/bash)
     - os: linux
       compiler: clang
       before_install:
@@ -81,3 +90,4 @@ script:
   - $COMPILER --version
   - cd thirdparty/googletest && cmake -DCMAKE_CXX_COMPILER=$COMPILER . && make
   - cd ../../tests && CXX=$COMPILER make
+  - cd ../ && ./get_code_cov.sh
