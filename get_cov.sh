@@ -1,5 +1,7 @@
 #!/bin/bash
-for filename in `find . | egrep '\.hpp'`;
+
+for filename in `find . -iregex ".*tests/.*cpp"`;
 do
-  gcov-5 -n -o . $filename > /dev/null;
+    echo $filename
+    gcov -n -o . $filename > /dev/null;
 done
