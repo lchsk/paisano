@@ -90,4 +90,4 @@ script:
   - $COMPILER --version
   - cd thirdparty/googletest && cmake -DCMAKE_CXX_COMPILER=$COMPILER . && make
   - cd ../../tests && CXX=$COMPILER make
-  - cd ../ && ./get_cov.sh
+  - ./get_cov.sh
