@@ -13,7 +13,7 @@ matrix:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['g++-5']
       env: COMPILER=g++-5
-      after_install:
+      after_success:
         - bash <(curl -s https://codecov.io/bash)
     - os: linux
       compiler: g++
@@ -25,7 +25,7 @@ matrix:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['g++-6']
       env: COMPILER=g++-6
-      after_install:
+      after_success:
         - bash <(curl -s https://codecov.io/bash)
     - os: linux
       compiler: g++
@@ -37,7 +37,7 @@ matrix:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['g++-7']
       env: COMPILER=g++-7
-      after_install:
+      after_success:
         - bash <(curl -s https://codecov.io/bash)
     - os: linux
       compiler: clang
