@@ -89,6 +89,9 @@ script:
   - uname -a
   - $COMPILER --version
   - cd thirdparty/googletest && cmake -DCMAKE_CXX_COMPILER=$COMPILER . && make
+  - pwd
   - cd ../../tests
+  - pwd
   - CXX=$COMPILER make
+  - pwd
   - ./get_cov.sh
