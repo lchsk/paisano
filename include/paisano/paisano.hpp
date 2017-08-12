@@ -120,25 +120,56 @@ namespace paisano {
 
         std::vector<T> data_;
     private:
-        union Index_ {
-            Index<U> index;
-            RangeIndex range_index;
+        struct InternalIndex {
+            IndexType index_type_;
 
-            Index_(const Index<U>& index) : index(index) {};
-            Index_(const RangeIndex& index) : range_index(index) {};
+            union IndexContainer {
+                Index<U> index;
+                RangeIndex range_index;
 
-            ~Index_() {}
+                IndexContainer(const Index<U>& index) :
+                    index(index) {};
+                IndexContainer(const RangeIndex& index) :
+                    range_index(index) {};
+
+                ~IndexContainer() {}
+            } index_;
+
+            InternalIndex(const Index<U>& index) :
+                index_type_(IndexType::INDEX),
+                index_(index) {};
+
+            InternalIndex(const RangeIndex& index) :
+                index_type_(IndexType::RANGE),
+                index_(index) {};
+
+            ~InternalIndex()
+            {
+                switch (index_type_) {
+                case IndexType::INDEX:
+                    index_.index.~Index<U>();
+                    break;
+                case IndexType::RANGE:
+                    index_.range_index.~RangeIndex();
+                    break;
+                }
+            }
+
+            Index<U>& index() { return index_.index; }
+            const Index<U>& index() const { return index_.index; }
+
+            RangeIndex& range_index() { return index_.range_index; }
+            const RangeIndex& range_index() const { return index_.range_index; }
         } index_;
 
-		IndexType index_type_;
+        const IndexType index_type() const { return index_.index_type_; }
     };
 
     template <typename T, typename U>
     BaseSeries<T, U>::BaseSeries(const std::vector<T>& data,
                                  const RangeIndex& index) :
         data_(data),
-        index_(index),
-        index_type_(IndexType::RANGE)
+        index_(index)
     {
     }
 
@@ -152,9 +183,7 @@ namespace paisano {
     BaseSeries<T, U>::BaseSeries(const std::vector<T>& data,
                                  const Index<U>& index) :
         data_(data),
-        index_(index),
-        index_type_(IndexType::INDEX)
-
+        index_(index)
     {
         assert_invariants_();
     }
@@ -243,20 +272,20 @@ namespace paisano {
     template <typename T, typename U>
     const T& BaseSeries<T, U>::get_index_by_int_(const int index) const
     {
-        switch (index_type_) {
+        switch (index_type()) {
         case IndexType::RANGE:
             {
-                if (index % index_.range_index.get_step_() != 0) {
+                if (index % index_.range_index().get_step_() != 0) {
                     throw std::out_of_range("Out of range");
                 }
 
-                return data_.at((index - index_.range_index.get_start_())
-                                / index_.range_index.get_step_());
+                return data_.at((index - index_.range_index().get_start_())
+                                / index_.range_index().get_step_());
             }
         case IndexType::INDEX:
             {
-            return data_.at((index - index_.index.get_start_())
-                            / index_.index.get_step_());
+                return data_.at((index - index_.index().get_start_())
+                                / index_.index().get_step_());
             }
         }
     }
@@ -271,15 +300,15 @@ namespace paisano {
     template <typename T, typename U>
     const T& BaseSeries<T, U>::get_index_by_U_(const U& index) const
     {
-        auto it = std::find(index_.index.get_index_().begin(),
-                            index_.index.get_index_().end(),
+        auto it = std::find(index_.index().get_index_().begin(),
+                            index_.index().get_index_().end(),
                             index);
 
-        if (it == index_.index.get_index_().end()) {
+        if (it == index_.index().get_index_().end()) {
             throw std::out_of_range("Out of range");
         }
 
-        return data_[std::distance(index_.index.get_index_().begin(), it)];
+        return data_[std::distance(index_.index().get_index_().begin(), it)];
     }
 
     template <typename T, typename U>
@@ -296,7 +325,7 @@ namespace paisano {
         data_.resize(map.size());
 
         for (const auto &item : map) {
-            index_.index.get_index_().push_back(item.first);
+            index_.index().get_index_().push_back(item.first);
             data_.push_back(item.second);
         }
     }
@@ -304,7 +333,7 @@ namespace paisano {
     template <typename T, typename U>
     void BaseSeries<T, U>::assert_invariants_()
     {
-        index_.index.assert_invariants_(data_.size());
+        index_.index().assert_invariants_(data_.size());
     }
 }
 
