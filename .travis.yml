@@ -88,6 +88,6 @@ script:
   - cd ../../tests
   - pwd
   - CXX=$COMPILER make
+  - make memcheck
   - pwd
   - ./get_cov.sh
-  - valgrind --leak-check=full make
