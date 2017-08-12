@@ -29,7 +29,6 @@ namespace paisano {
     template <typename T>
     class IndexBase {
         public:
-        IndexType type_;
         virtual void assert_invariants_(const std::size_t data_size){};
 
         virtual const int64_t get_start_() const {};
@@ -59,7 +58,6 @@ namespace paisano {
     Index<T>::Index(const std::vector<T>& index) :
         index_(index)
     {
-        this->type_ = IndexType::INDEX;
     }
 
     template <typename T>
@@ -97,7 +95,6 @@ namespace paisano {
         stop_(stop),
         step_(step)
     {
-        this->type_ = IndexType::RANGE;
     }
 
     template <typename T, typename U = None>
