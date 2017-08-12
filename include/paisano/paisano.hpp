@@ -112,7 +112,7 @@ namespace paisano {
         const T& get_index_by_U_(const U& index) const;
         T& get_index_by_U_(const U& index);
 
-        const std::vector<T>& data() const;
+        const std::vector<T>& data() const { return data_; };
 
     protected:
         template <typename MAP>
@@ -308,12 +308,6 @@ namespace paisano {
     void BaseSeries<T, U>::assert_invariants_()
     {
         index_.index.assert_invariants_(data_.size());
-    }
-
-    template <typename T, typename U>
-    const std::vector<T>& BaseSeries<T, U>::data() const
-    {
-        return data_;
     }
 }
 
