@@ -11,7 +11,7 @@ matrix:
         apt:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['g++-5']
-      env: COMPILER=g++-5
+      env: COMPILER=g++-5 COV_FLAGS="-lgcov -fprofile-arcs -ftest-coverage"
       after_success:
         - bash <(curl -s https://codecov.io/bash)
     - os: linux
@@ -22,7 +22,7 @@ matrix:
         apt:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['g++-6']
-      env: COMPILER=g++-6
+      env: COMPILER=g++-6 COV_FLAGS="-lgcov -fprofile-arcs -ftest-coverage"
       after_success:
         - bash <(curl -s https://codecov.io/bash)
     - os: linux
@@ -33,7 +33,7 @@ matrix:
         apt:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['g++-7']
-      env: COMPILER=g++-7
+      env: COMPILER=g++-7 COV_FLAGS="-lgcov -fprofile-arcs -ftest-coverage"
       after_success:
         - bash <(curl -s https://codecov.io/bash)
     - os: linux

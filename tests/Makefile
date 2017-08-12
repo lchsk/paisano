@@ -1,6 +1,6 @@
 GTEST_DIR = ../thirdparty/googletest/googletest
 GMOCK_DIR = ../thirdparty/googletest/googlemock
-CPP_TEST_FLAGS = -pthread -std=c++14 -g -lgcov -fprofile-arcs -ftest-coverage
+CPP_TEST_FLAGS = -pthread -std=c++14 -g $(COV_FLAGS)
 
 $(info $(CPP_TEST_FLAGS))
 
