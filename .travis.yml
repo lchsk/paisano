@@ -90,4 +90,7 @@ script:
   - CXX=$COMPILER make
   - make memcheck
   - pwd
-  - ./get_cov.sh
+  - |
+    if [ $COMPILER == "g++-6" ]; then
+      ./get_cov.sh
+    fi
