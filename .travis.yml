@@ -1,9 +1,6 @@
 language: cpp
 sudo: true
 
-before_install:
-  - sudo apt-get install valgrind
-
 matrix:
   include:
     - os: linux
@@ -87,6 +84,9 @@ matrix:
           # sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-4.0']
           # packages: ['clang-4.0']
       # env: COMPILER=clang++-4.0
+
+before_install:
+  - sudo apt-get install valgrind
 
 script:
   - uname -a
