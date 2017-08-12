@@ -5,7 +5,6 @@ matrix:
   include:
     - os: linux
       compiler: g++
-      before_install:
       install:
         - sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-5 90
       addons:
@@ -17,7 +16,6 @@ matrix:
         - bash <(curl -s https://codecov.io/bash)
     - os: linux
       compiler: g++
-      before_install:
       install:
         - sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-6 90
       addons:
@@ -29,7 +27,6 @@ matrix:
         - bash <(curl -s https://codecov.io/bash)
     - os: linux
       compiler: g++
-      before_install:
       install:
         - sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-7 90
       addons:
@@ -41,7 +38,6 @@ matrix:
         - bash <(curl -s https://codecov.io/bash)
     - os: linux
       compiler: clang++
-      before_install:
       install:
       addons:
         apt:
@@ -50,7 +46,6 @@ matrix:
       env: COMPILER=clang++-3.6
     - os: linux
       compiler: clang++
-      before_install:
       install:
       addons:
         apt:
@@ -59,7 +54,6 @@ matrix:
       env: COMPILER=clang++-3.7
     - os: linux
       compiler: clang++
-      before_install:
       install:
       addons:
         apt:
@@ -68,7 +62,6 @@ matrix:
       env: COMPILER=clang++-3.8
     - os: linux
       compiler: clang++
-      before_install:
       install:
       addons:
         apt:
@@ -77,7 +70,6 @@ matrix:
       env: COMPILER=clang++-3.9
     # - os: linux
       # compiler: clang++
-      # before_install:
       # install:
       # addons:
         # apt:
