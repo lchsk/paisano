@@ -114,8 +114,6 @@ namespace paisano {
 
         const std::vector<T>& data() const;
 
-        IndexType TYPE;
-
     protected:
         template <typename MAP>
         void init_map_(const MAP& map);
@@ -132,6 +130,8 @@ namespace paisano {
 
             ~Index_() {}
         } index_;
+
+		IndexType index_type_;
     };
 
     template <typename T, typename U>
@@ -139,7 +139,7 @@ namespace paisano {
                                  const RangeIndex& index) :
         data_(data),
         index_(index),
-        TYPE(IndexType::RANGE)
+        index_type_(IndexType::RANGE)
     {
         assert_invariants_();
     }
@@ -155,8 +155,8 @@ namespace paisano {
     BaseSeries<T, U>::BaseSeries(const std::vector<T>& data,
                                  const Index<U>& index) :
         data_(data),
-        TYPE(IndexType::INDEX),
-        index_(index)
+        index_(index),
+        index_type_(IndexType::INDEX)
 
     {
         assert_invariants_();
@@ -246,7 +246,7 @@ namespace paisano {
     template <typename T, typename U>
     const T& BaseSeries<T, U>::get_index_by_int_(const int index) const
     {
-        switch (TYPE) {
+        switch (index_type_) {
         case IndexType::RANGE:
             {
                 if (index % index_.range_index.get_step_() != 0) {
