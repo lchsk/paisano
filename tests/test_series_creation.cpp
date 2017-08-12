@@ -64,13 +64,13 @@ TEST(SeriesCreation, test_series_with_invalid_args)
     // Index has two elements, data has three
     paisano::Index<int> i{std::vector<int>{1, 2}};
 
-    // try {
-        // paisano::Series<int, int> s(std::vector<int>{3, 2, 1}, i);
+    try {
+        paisano::Series<int, int> s(std::vector<int>{3, 2, 1}, i);
 
-        // FAIL();
-    // } catch (std::invalid_argument) {
-        // SUCCEED();
-    // }
+        FAIL();
+    } catch (std::invalid_argument) {
+        SUCCEED();
+    }
 }
 
 int main (int argc, char** argv) {
