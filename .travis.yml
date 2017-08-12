@@ -1,6 +1,9 @@
 language: cpp
 sudo: true
 
+before_install:
+  - sudo apt-get install valgrind
+
 matrix:
   include:
     - os: linux
@@ -95,3 +98,4 @@ script:
   - CXX=$COMPILER make
   - pwd
   - ./get_cov.sh
+  - valgrind --leak-check=full --no-early-exit --verbose=1 make
