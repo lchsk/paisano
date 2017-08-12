@@ -1,6 +1,8 @@
 GTEST_DIR = ../thirdparty/googletest/googletest
 GMOCK_DIR = ../thirdparty/googletest/googlemock
-CPP_TEST_FLAGS = -pthread -std=c++14 -lgcov -fprofile-arcs -ftest-coverage
+CPP_TEST_FLAGS = -pthread -std=c++14 -g -lgcov -fprofile-arcs -ftest-coverage
+
+$(info $(CPP_TEST_FLAGS))
 
 GTEST_LIB = $(GTEST_DIR)/../googlemock/gtest/libgtest.a
 GMOCK_LIB = $(GTEST_DIR)/../googlemock/libgmock.a
@@ -14,6 +16,9 @@ clean:
 
 check:
 	$(foreach var, $(TESTS), ./$(var);)
+
+memcheck:
+	$(foreach var, $(TESTS), valgrind --leak-check=full ./$(var);)
 
 test_series_creation: clean
 	$(CXX) -I $(GMOCK_DIR)/include/ -I $(GTEST_DIR)/include/  \
