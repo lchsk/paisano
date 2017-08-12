@@ -63,17 +63,16 @@ namespace paisano {
     template <typename T>
     void Index<T>::assert_invariants_(const std::size_t data_size)
     {
-        // if (data_size != index_.size() && this->type_ == IndexType::INDEX) {
-        // if (data_size != index_.size()) {
-            // std::stringstream s;
-            // s << "Invalid number of arguments, data has "
-              // << data_size
-              // << " elements and index has "
-              // << index_.size()
-              // << " elements";
+        if (data_size != index_.size()) {
+            std::stringstream s;
+            s << "Invalid number of arguments, data has "
+              << data_size
+              << " elements and index has "
+              << index_.size()
+              << " elements";
 
-            // throw std::invalid_argument(s.str());
-        // }
+            throw std::invalid_argument(s.str());
+        }
     }
 
     class RangeIndex : public IndexBase<None> {
@@ -141,14 +140,12 @@ namespace paisano {
         index_(index),
         index_type_(IndexType::RANGE)
     {
-        assert_invariants_();
     }
 
     template <typename T, typename U>
     BaseSeries<T, U>::BaseSeries(const std::vector<T>& data)
         : BaseSeries<T, U>(data, RangeIndex(0, data.size(), 1))
     {
-        assert_invariants_();
     }
 
     template <typename T, typename U>
