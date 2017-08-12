@@ -40,50 +40,50 @@ matrix:
       after_success:
         - bash <(curl -s https://codecov.io/bash)
     - os: linux
-      compiler: clang
+      compiler: clang++
       before_install:
       install:
       addons:
         apt:
           sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.6']
-          packages: ['clang-3.6']
-      env: COMPILER=clang-3.6
+          packages: ['clang-3.6', 'g++-6']
+      env: COMPILER=clang++-3.6
     - os: linux
-      compiler: clang
+      compiler: clang++
       before_install:
       install:
       addons:
         apt:
           sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.7']
-          packages: ['clang-3.7']
-      env: COMPILER=clang-3.7
+          packages: ['clang-3.7', 'g++-6']
+      env: COMPILER=clang++-3.7
     - os: linux
-      compiler: clang
+      compiler: clang++
       before_install:
       install:
       addons:
         apt:
           sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.8']
-          packages: ['clang-3.8']
-      env: COMPILER=clang-3.8
+          packages: ['clang-3.8', 'g++-6']
+      env: COMPILER=clang++-3.8
     - os: linux
-      compiler: clang
+      compiler: clang++
       before_install:
       install:
       addons:
         apt:
           sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.9']
-          packages: ['clang-3.9']
-      env: COMPILER=clang-3.9
-    - os: linux
-      compiler: clang
-      before_install:
-      install:
-      addons:
-        apt:
-          sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-4.0']
-          packages: ['clang-4.0']
-      env: COMPILER=clang-4.0
+          packages: ['clang-3.9', 'g++-6']
+      env: COMPILER=clang++-3.9
+    # - os: linux
+      # compiler: clang++
+      # before_install:
+      # install:
+      # addons:
+        # apt:
+          # sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-4.0']
+          # packages: ['clang-4.0']
+      # env: COMPILER=clang++-4.0
 
 script:
   - uname -a
